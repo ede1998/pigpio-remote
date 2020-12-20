@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <sys/types.h>
+#include "../helper.h"
 
 typedef unsigned int socklen_t;
 /* Types of sockets.  */
@@ -98,10 +99,10 @@ struct sockaddr
 
 #define PF_UNSPEC 0 /* Unspecified.  */
 
-ssize_t send(int socket, const void *buffer, size_t length, int flags);
-int connect(int socket, const struct sockaddr *address, socklen_t address_len);
-int setsockopt(int socket, int level, int option_name, const void *option_value, socklen_t option_len);
-int socket(int domain, int type, int protocol);
-ssize_t recv(int socket, void *buffer, size_t length, int flags);
+PIGPIO_WRAPPER_EXTERN ssize_t send(int socket, const void *buffer, size_t length, int flags);
+PIGPIO_WRAPPER_EXTERN int connect(int socket, const struct sockaddr *address, socklen_t address_len);
+PIGPIO_WRAPPER_EXTERN int setsockopt(int socket, int level, int option_name, const void *option_value, socklen_t option_len);
+PIGPIO_WRAPPER_EXTERN int socket(int domain, int type, int protocol);
+PIGPIO_WRAPPER_EXTERN ssize_t recv(int socket, void *buffer, size_t length, int flags);
 
 #endif // __SYS_SOCKET_H
