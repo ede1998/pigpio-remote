@@ -3,7 +3,6 @@
 
 #include "PiConnection.h"
 #include "PigpioError.h"
-#include <optional.hpp>
 #include "result.h"
 
 enum class GpioMode
@@ -59,7 +58,7 @@ public:
     BasicIo(PiConnection &connection);
 
     GpioModeError set_mode(unsigned int gpio, GpioMode mode);
-    tl::optional<GpioMode> get_mode(unsigned int gpio);
+    PigpioResult<GpioMode, GpioReadError> get_mode(unsigned int gpio);
     GpioPullUpDownError set_pull_up_down(unsigned int gpio, GpioPullUpDown pud);
     PigpioResult<GpioLevel, GpioReadError> gpio_read(unsigned int gpio);
     GpioWriteError gpio_write(unsigned int gpio, GpioLevel level);

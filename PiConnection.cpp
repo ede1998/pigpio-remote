@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <limits>
 
-typedef void* pthread_t;
 #include "pigpio1/command.h"
 
 constexpr char PiConnection::ENV_ADDRESS[];
@@ -75,6 +74,10 @@ bool PiConnection::connected() const
 
 void PiConnection::stop()
 {
+    // if (false) // notify stuff connected (not implemented yet)
+    // {
+    //     auto result = this->send_command(SocketCommand::PI_CMD_NC, /* replace with notification_handle*/ 0);
+    // }
     this->_client.stop();
 }
 

@@ -9,27 +9,30 @@ BasicIo::BasicIo(PiConnection &connection)
 
 GpioModeError BasicIo::set_mode(unsigned int gpio, GpioMode mode)
 {
-    return GpioModeError(PigpioError::PI_OK);
+    auto result = this->_connection.send_command(SocketCommand::PI_CMD_MODES, gpio, static_cast<uint32_t>(mode));
+    return GpioModeError(result.Error);
 }
 
-tl::optional<GpioMode> BasicIo::get_mode(unsigned int gpio)
+PigpioResult<GpioMode, GpioReadError> BasicIo::get_mode(unsigned int gpio)
 {
-    return tl::optional<GpioMode>();
+    auto result = this->_connection.send_command(SocketCommand::PI_CMD_MODEG, gpio);
+    return make_result<GpioMode, GpioReadError>(result);
 }
 
 GpioPullUpDownError BasicIo::set_pull_up_down(unsigned int gpio, GpioPullUpDown pud)
 {
-    return GpioPullUpDownError(PigpioError::PI_OK);
+    auto result = this->_connection.send_command(SocketCommand::PI_CMD_PUD, gpio, static_cast<uint32_t>(pud));
+    return GpioPullUpDownError(result.Error);
 }
 
 PigpioResult<GpioLevel, GpioReadError> BasicIo::gpio_read(unsigned int gpio)
 {
-    auto result = this->_connection.send_command(SocketCommand::PI_CMD_READ, gpio, 0);
-    return result.Error == PigpioError::PI_OK ? PigpioResult<GpioLevel, GpioReadError>(static_cast<GpioLevel>(result.Result))
-                                              : PigpioResult<GpioLevel, GpioReadError>(result.Error);
+    auto result = this->_connection.send_command(SocketCommand::PI_CMD_READ, gpio);
+    return make_result<GpioLevel, GpioReadError>(result);
 }
 
 GpioWriteError BasicIo::gpio_write(unsigned int gpio, GpioLevel level)
 {
-    return GpioWriteError(PigpioError::PI_OK);
+    auto result = this->_connection.send_command(SocketCommand::PI_CMD_WRITE, gpio);
+    return GpioWriteError(result.Error);
 }
