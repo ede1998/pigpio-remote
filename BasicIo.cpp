@@ -33,6 +33,6 @@ PigpioResult<GpioLevel, GpioReadError> BasicIo::gpio_read(unsigned int gpio)
 
 GpioWriteError BasicIo::gpio_write(unsigned int gpio, GpioLevel level)
 {
-    auto result = this->_connection.send_command(SocketCommand::PI_CMD_WRITE, gpio);
+    auto result = this->_connection.send_command(SocketCommand::PI_CMD_WRITE, gpio, static_cast<uint32_t>(level));
     return GpioWriteError(result.Error);
 }

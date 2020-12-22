@@ -6,14 +6,16 @@
 #include "PigpioError.h"
 #include "socket_command.h"
 #include <string>
+#include <chrono>
 
 enum class PiConnectionError
 {
     SUCCESS = 0,
-    TIME_OUT = 1,
-    INVALID_SERVER = 2,
-    TRUNCATED = 3,
-    INVALID_RESPONSE = 4
+    TIME_OUT = -1,
+    INVALID_SERVER = -2,
+    TRUNCATED = -3,
+    INVALID_RESPONSE = -4,
+    ALREADY_CONNECTED = -5
 };
 
 struct SendCommandResult
@@ -53,8 +55,9 @@ PigpioResult<result_t, error_t> make_result(SendCommandResult result)
 class PiConnection
 {
 private:
+    using int_milliseconds_t = std::chrono::duration<int, std::milli>;
     NoNagleSyncClient _client;
-    std::pair<int, PigpioError> test;
+    int_milliseconds_t _timeout_milliseconds;
 
 public:
     PiConnection();
@@ -64,6 +67,8 @@ public:
     PiConnectionError connect(const char *addr, uint16_t port = 0);
     PiConnectionError connect(const IPAddress &addr, uint16_t port = 0);
     bool connected() const;
+
+    void set_timeout(int millseconds);
 
     void stop();
 
@@ -75,6 +80,7 @@ public:
     static constexpr char ENV_ADDRESS[] = "PIGPIO_ADDR";
     static constexpr char ENV_PORT[] = "PIGPIO_PORT";
     static constexpr uint32_t UNUSED_PARAMETER = 0;
+    static constexpr int DEFAULT_SOCKET_TIMEOUT_MILLISECONDS = 5000;
 };
 
 #endif // _PIGPIO_WRAPPER_PICONNECTION

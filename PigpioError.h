@@ -177,26 +177,39 @@ class BasicPigpioErrorView
 private:
     const PigpioError _error;
 
-    template <PigpioError e, PigpioError... others>
-    bool _is_error_allowed() const
+    template <typename = void>
+    bool _error_allowed() const
     {
-        return e == this->_error || this->_is_error_allowed<others...>();
+        return false;
+    }
+
+    // This way, code to compare all allowed errors to the one that occurred is generated at compile time.
+    // Source to make it work: https://stackoverflow.com/a/51000072
+    template <PigpioError e, PigpioError... others>
+    bool _error_allowed() const
+    {
+        return this->_error == e || this->_error_allowed<others...>();
     }
 
     bool is_error_allowed() const
     {
-        return this->_is_error_allowed<allowed_errors...>();
+        return _error_allowed<allowed_errors...>();
     }
 
 public:
     BasicPigpioErrorView(const PigpioError error)
-    : _error(error)
+        : _error(error)
     {
     }
 
     operator PigpioError() const
     {
         return this->is_error_allowed() ? this->_error : PigpioError::PI_UNEXPECTED_ERROR;
+    }
+
+    operator int() const
+    {
+        return static_cast<int>(static_cast<PigpioError>(*this));
     }
 
     PigpioError get_error() const
@@ -214,13 +227,13 @@ using PigpioErrorView = BasicPigpioErrorView<PigpioError::PI_OK,
 template <typename return_value_t, typename error_t>
 class PigpioResult
 {
-    public:
+public:
     tl::optional<return_value_t> Value;
     error_t Error;
 
     PigpioResult(return_value_t value)
         : Value(value), Error(error_t(PigpioError::PI_OK))
-    { 
+    {
     }
 
     PigpioResult(PigpioError error)
