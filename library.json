@@ -9,10 +9,9 @@
     "platforms": "espressif8266",
     "build": {
         "srcFilter": [
-            "+<*>-<pigpio/*>",
-            "+<pigpio/pigpiod_if2.c>",
-            "+<pigpio/command.c>"
+            "+<*>-<pigpio1/*>"
         ],
-        "includeDir": "pigpio"
+        "includeDir": "pigpio1",
+        "flags": "-Wno-comment"
     }
 }

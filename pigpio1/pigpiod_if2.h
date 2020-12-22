@@ -381,7 +381,7 @@ seconds: the number of seconds to delay.
 D*/
 
 /*F*/
-char *pigpio_error(int errnum);
+const char *pigpio_error(int errnum);
 /*D
 Return a text description for an error code.
 
