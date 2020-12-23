@@ -1,16 +1,26 @@
 {
-    "name": "pigpio-wrapper",
-    "version": "1.0.0",
+    "name": "pigpio-remote",
+    "version": "0.1.0",
+    "description": "Remotely control the GPIO pins of a Raspberry Pi over the network. This library communicates with a Pigpio daemon (http://abyz.me.uk/rpi/pigpio)",
     "repository": {
         "type": "git",
-        "url": "https://github.com/foo/bar.git"
+        "url": "https://github.com/ede1998/pigpio-remote/"
     },
+    "authors": [
+        {
+            "name": "Erik Hennig",
+            "email": "pigpio-remote@erik-hennig.me",
+            "url": "https://github.com/ede1998",
+            "maintainer": true
+        }
+    ],
     "frameworks": "arduino",
     "platforms": "espressif8266",
     "build": {
         "srcFilter": [
             "+<src/*>"
         ],
-        "includeDir": "include/"
+        "includeDir": "include/",
+        "flags": "-D PIGPIO_REMOTE_PLATFORM_ARDUINO"
     }
 }
