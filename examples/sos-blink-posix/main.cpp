@@ -1,6 +1,6 @@
 #include <iostream>
-#include <pigpio-remote/PiConnection.h>
 #include <pigpio-remote/BasicIo.h>
+#include <pigpio-remote/PiConnection.h>
 
 constexpr unsigned int GPIO_PIN = 17;
 constexpr unsigned int LONG_DURATION = 4;

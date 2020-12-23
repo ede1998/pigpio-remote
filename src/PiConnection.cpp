@@ -3,13 +3,11 @@
 #include <cstdlib>
 #include <limits>
 
-#include "platform/platform.h"
-
 #include "pigpio1/command.h"
 
-constexpr char PiConnection::ENV_ADDRESS[];
-constexpr char PiConnection::ENV_PORT[];
-constexpr char PiConnection::DEFAULT_ADDRESS[];
+constexpr const char *PiConnection::ENV_ADDRESS;
+constexpr const char *PiConnection::ENV_PORT;
+constexpr const char *PiConnection::DEFAULT_ADDRESS;
 
 uint16_t determine_port(uint16_t original_port)
 {
@@ -38,7 +36,7 @@ ConnectionError PiConnection::connect(uint16_t port)
 {
     port = determine_port(port);
     const char *env = std::getenv(PiConnection::ENV_ADDRESS);
-    const char *addr = env ? env : PiConnection::DEFAULT_ADDRESS;
+    const char *addr = env != nullptr ? env : PiConnection::DEFAULT_ADDRESS;
     return this->connect(addr, port);
 }
 
@@ -113,10 +111,6 @@ SendCommandResult PiConnection::send_command(SocketCommand command, uint32_t par
 NoNagleSyncClient PiConnection::get_connection()
 {
     return this->_client;
-}
-
-PiConnection::PiConnection()
-{
 }
 
 PiConnection::~PiConnection()

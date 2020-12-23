@@ -47,7 +47,7 @@ private:
     NoNagleSyncClient _client;
 
 public:
-    PiConnection();
+    PiConnection() = default;
     ~PiConnection();
     ConnectionError connect(uint16_t port = 0);
     ConnectionError connect(const std::string &addr, uint16_t port = 0);
@@ -60,9 +60,9 @@ public:
 
     NoNagleSyncClient get_connection();
     static constexpr uint16_t DEFAULT_PORT = 8888;
-    static constexpr char DEFAULT_ADDRESS[] = "localhost";
-    static constexpr char ENV_ADDRESS[] = "PIGPIO_ADDR";
-    static constexpr char ENV_PORT[] = "PIGPIO_PORT";
+    static constexpr const char *DEFAULT_ADDRESS = "localhost";
+    static constexpr const char *ENV_ADDRESS = "PIGPIO_ADDR";
+    static constexpr const char *ENV_PORT = "PIGPIO_PORT";
     static constexpr uint32_t UNUSED_PARAMETER = 0;
 };
 
