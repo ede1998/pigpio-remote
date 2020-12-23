@@ -20,7 +20,7 @@ private:
     friend class BaseNoNagleSyncClient;
     int _socket;
 
-    inline ConnectionError _connect(const char *ip, uint8_t port)
+    inline ConnectionError _connect(const char *ip, uint16_t port)
     {
         int sock, err, opt;
         struct addrinfo hints, *res, *rp;
