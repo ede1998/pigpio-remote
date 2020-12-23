@@ -2,7 +2,6 @@
 #define _PIGPIO_WRAPPER_PICONNECTION 1
 
 #include "../../src/platform/NoNagleSyncClient.h"
-#include "../../external/result.h"
 #include "PigpioError.h"
 #include "../../src/socket_command.h"
 #include <string>

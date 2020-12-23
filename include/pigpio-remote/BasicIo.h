@@ -3,7 +3,6 @@
 
 #include "PiConnection.h"
 #include "PigpioError.h"
-#include "../external/result.h"
 
 enum class GpioMode
 {
