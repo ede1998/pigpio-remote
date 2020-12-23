@@ -1,7 +1,7 @@
 #ifndef __PIGPIOERROR_H__
 #define __PIGPIOERROR_H__
 
-#include "optional.hpp"
+#include "../../external/optional.hpp"
 
 enum class PigpioError
 {

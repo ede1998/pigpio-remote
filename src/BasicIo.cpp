@@ -1,4 +1,4 @@
-#include "BasicIo.h"
+#include "../include/pigpio-remote/BasicIo.h"
 
 #include "socket_command.h"
 

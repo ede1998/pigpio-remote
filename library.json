@@ -9,9 +9,8 @@
     "platforms": "espressif8266",
     "build": {
         "srcFilter": [
-            "+<*>-<pigpio1/*>"
+            "+<src/*>"
         ],
-        "includeDir": "pigpio1",
-        "flags": "-Wno-comment"
+        "includeDir": "include/"
     }
 }

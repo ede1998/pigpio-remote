@@ -1,9 +1,9 @@
-#include "PiConnection.h"
+#include "../include/pigpio-remote/PiConnection.h"
 
 #include <cstdlib>
 #include <limits>
 
-#include "Arduino.h"
+#include "platform/platform.h"
 
 #include "pigpio1/command.h"
 
@@ -34,7 +34,7 @@ uint16_t determine_port(uint16_t original_port)
     return PiConnection::DEFAULT_PORT;
 }
 
-PiConnectionError PiConnection::connect(uint16_t port)
+ConnectionError PiConnection::connect(uint16_t port)
 {
     port = determine_port(port);
     const char *env = std::getenv(PiConnection::ENV_ADDRESS);
@@ -42,46 +42,30 @@ PiConnectionError PiConnection::connect(uint16_t port)
     return this->connect(addr, port);
 }
 
-PiConnectionError PiConnection::connect(const std::string &addr, uint16_t port)
+ConnectionError PiConnection::connect(const std::string &addr, uint16_t port)
 {
     return this->connect(addr.c_str(), port);
 }
 
-PiConnectionError PiConnection::connect(const char *addr, uint16_t port)
-{
-    IPAddress ip;
-    if (!ip.fromString(addr))
-    {
-        return PiConnectionError::INVALID_SERVER;
-    }
-
-    return this->connect(ip, port);
-}
-
-PiConnectionError PiConnection::connect(const IPAddress &addr, uint16_t port)
+ConnectionError PiConnection::connect(const char *addr, uint16_t port)
 {
     if (this->connected())
     {
-        return PiConnectionError::ALREADY_CONNECTED;
+        return ConnectionError::ALREADY_CONNECTED;
     }
 
     port = determine_port(port);
     if (port == 0)
     {
-        return PiConnectionError::INVALID_SERVER;
+        return ConnectionError::INVALID_SERVER;
     }
-    auto result = this->_client._connect(addr, port);
-    return static_cast<PiConnectionError>(result == 1 ? 0 : result);
+
+    return this->_client.connect(addr, port);
 }
 
 bool PiConnection::connected() const
 {
-    return const_cast<NoNagleSyncClient &>(this->_client).connected();
-}
-
-void PiConnection::set_timeout(int milliseconds)
-{
-    this->_timeout_milliseconds = std::chrono::duration<int, std::milli>(milliseconds);
+    return this->_client.connected();
 }
 
 void PiConnection::stop()
@@ -108,20 +92,10 @@ SendCommandResult PiConnection::send_command(SocketCommand command, uint32_t par
 
     //_pml(pi);
 
-    if (this->_client.immediate_write(reinterpret_cast<uint8_t *>(&cmd), sizeof(cmd)) != sizeof(cmd))
+    if (this->_client.write(reinterpret_cast<uint8_t *>(&cmd), sizeof(cmd)) != sizeof(cmd))
     {
         //_pmu(pi);
         return SendCommandResult::create(PigpioError::pigif_bad_send);
-    }
-
-    auto start = std::chrono::steady_clock::now();
-    auto elapsed_milliseconds = int_milliseconds_t::zero();
-    while (this->_client.available() < static_cast<int>(sizeof(cmd)) &&
-           elapsed_milliseconds < this->_timeout_milliseconds)
-    {
-        delay(1);
-        auto current = std::chrono::steady_clock::now();
-        elapsed_milliseconds = std::chrono::duration_cast<int_milliseconds_t>(current - start);
     }
 
     if (this->_client.read(reinterpret_cast<uint8_t *>(&cmd), sizeof(cmd)) != sizeof(cmd))
@@ -143,7 +117,6 @@ NoNagleSyncClient PiConnection::get_connection()
 
 PiConnection::PiConnection()
 {
-    this->_timeout_milliseconds = std::chrono::duration<int, std::milli>(PiConnection::DEFAULT_SOCKET_TIMEOUT_MILLISECONDS);
 }
 
 PiConnection::~PiConnection()
