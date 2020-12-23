@@ -14,7 +14,7 @@ private:
     friend class BaseNoNagleSyncClient;
     SyncClient _client;
 
-    inline ConnectionError _connect(const char *ip, uint8_t port)
+    inline ConnectionError _connect(const char *ip, uint16_t port)
     {
         auto result = this->_client.connect(ip, port);
         return static_cast<ConnectionError>(result == 1 ? 0 : result);
