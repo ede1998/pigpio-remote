@@ -6,7 +6,7 @@
 #ifdef PIGPIO_REMOTE_PLATFORM_ARDUINO
 #include "Arduino.h"
 
-void wait(unsigned long ms) inline
+inline void wait(unsigned long ms)
 {
     delay(ms);
 }
@@ -14,7 +14,7 @@ void wait(unsigned long ms) inline
 
 #ifdef PIGPIO_REMOTE_PLATFORM_POSIX
 #include <ctime>
-#include <cerrno>    
+#include <cerrno>
 #include <cassert>
 void wait(long msec)
 {
@@ -29,11 +29,11 @@ void wait(long msec)
     ts.tv_sec = msec / 1000;
     ts.tv_nsec = (msec % 1000) * 1000000;
 
-    do {
+    do
+    {
         res = nanosleep(&ts, &ts);
     } while (res && errno == EINTR);
 }
 #endif
-
 
 #endif // __PLATFORM_H__

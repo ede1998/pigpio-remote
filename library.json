@@ -1,6 +1,6 @@
 {
     "name": "pigpio-remote",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Remotely control the GPIO pins of a Raspberry Pi over the network. This library communicates with a Pigpio daemon (http://abyz.me.uk/rpi/pigpio)",
     "repository": {
         "type": "git",
@@ -17,9 +17,6 @@
     "frameworks": "arduino",
     "platforms": "espressif8266",
     "build": {
-        "srcFilter": [
-            "+<src/*>"
-        ],
         "includeDir": "include/",
         "flags": "-D PIGPIO_REMOTE_PLATFORM_ARDUINO"
     }

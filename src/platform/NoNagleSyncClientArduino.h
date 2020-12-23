@@ -16,16 +16,17 @@ private:
 
     inline ConnectionError _connect(const char *ip, uint8_t port)
     {
-        return this->_client.connect(ip, port);
+        auto result = this->_client.connect(ip, port);
+        return static_cast<ConnectionError>(result == 1 ? 0 : result);
     }
 
     inline bool _connected() const
     {
-        return const_cast<const SyncClient &>(this->_client).connected();
+        return const_cast<SyncClient &>(this->_client).connected();
     }
     inline int _available() const
     {
-        return const_cast<const SyncClient &>(this->_client).available();
+        return const_cast<SyncClient &>(this->_client).available();
     }
 
     inline int _read(uint8_t *data, size_t len)
@@ -53,6 +54,11 @@ private:
 
         this->_client.flush();
         return result;
+    }
+
+    void _stop()
+    {
+        this->_client.stop();
     }
 
 public:
