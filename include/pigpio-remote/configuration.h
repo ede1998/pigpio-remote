@@ -2,7 +2,11 @@
 #define __PIGPIO_CONFIGURATIONH_H__
 
 #if !(defined(PIGPIO_REMOTE_PLATFORM_ARDUINO) ^ defined(PIGPIO_REMOTE_PLATFORM_POSIX))
-#error "Unique target platform macro PIGPI_REMOTE_PLATFORM must be defined."
+#    ifdef ARDUINO
+#        define PIGPIO_REMOTE_PLATFORM_ARDUINO
+#    else
+#        error "Unique target platform macro PIGPI_REMOTE_PLATFORM must be defined."
+#    endif
 #endif
 
 namespace version
