@@ -1,5 +1,5 @@
-#ifndef _PIGPIO_WRAPPER_BASICIO
-#define _PIGPIO_WRAPPER_BASICIO 1
+#ifndef PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_BASICIO_H 
+#define PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_BASICIO_H 
 
 #include "PiConnection.h"
 #include "PigpioError.h"
@@ -63,4 +63,4 @@ public:
     GpioWriteError Write(unsigned int gpio, GpioLevel level);
 };
 
-#endif // _PIGPIO_WRAPPER_BASICIO
+#endif // PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_BASICIO_H

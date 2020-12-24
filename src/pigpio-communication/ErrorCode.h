@@ -1,5 +1,5 @@
-#ifndef __ERRORCODE_H__
-#define __ERRORCODE_H__
+#ifndef PIGPIO_REMOTE_SRC_PIGPIO_COMMUNICATION_ERRORCODE_H 
+#define PIGPIO_REMOTE_SRC_PIGPIO_COMMUNICATION_ERRORCODE_H 
 
 enum class PigpioError
 {
@@ -169,4 +169,4 @@ enum class PigpioError
     PI_ONLY_ON_BCM2711 = -146,  // only available on BCM2711
 };
 
-#endif // __ERRORCODE_H__
+#endif // PIGPIO_REMOTE_SRC_PIGPIO_COMMUNICATION_ERRORCODE_H

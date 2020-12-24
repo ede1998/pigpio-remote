@@ -1,5 +1,5 @@
-#ifndef __PLATFORM_H__
-#define __PLATFORM_H__
+#ifndef PIGPIO_REMOTE_SRC_PLATFORM_PLATFORM_H 
+#define PIGPIO_REMOTE_SRC_PLATFORM_PLATFORM_H 
 
 #include "../include/pigpio-remote/Configuration.h"
 
@@ -36,4 +36,4 @@ void Wait(long msec)
 }
 #endif
 
-#endif // __PLATFORM_H__
+#endif // PIGPIO_REMOTE_SRC_PLATFORM_PLATFORM_H

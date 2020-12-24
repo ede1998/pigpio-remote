@@ -29,8 +29,8 @@ For more information, please refer to <http://unlicense.org/>
 This version is for pigpio version 70+
 */
 
-#ifndef COMMAND_H
-#define COMMAND_H
+#ifndef PIGPIO_REMOTE_SRC_PIGPIO_COMMUNICATION_COMMAND_H 
+#define PIGPIO_REMOTE_SRC_PIGPIO_COMMUNICATION_COMMAND_H 
 
 #include <stdio.h>
 #include <string.h>

@@ -1,5 +1,5 @@
-#ifndef __PIGPIOERROR_H__
-#define __PIGPIOERROR_H__
+#ifndef PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PIGPIOERROR_H 
+#define PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PIGPIOERROR_H 
 
 #include "../../external/tl/optional.hpp"
 #include "../../src/pigpio-communication/ErrorCode.h"
@@ -75,4 +75,4 @@ public:
     }
 };
 
-#endif // __PIGPIOERROR_H__
+#endif // PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PIGPIOERROR_H

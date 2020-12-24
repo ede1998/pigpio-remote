@@ -1,5 +1,5 @@
-#ifndef __NONAGLESYNCCLIENT_H__
-#define __NONAGLESYNCCLIENT_H__
+#ifndef PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_H 
+#define PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_H 
 
 #include "../../include/pigpio-remote/Configuration.h"
 
@@ -11,4 +11,4 @@
 #include "NoNagleSyncClient/NoNagleSyncClientPosix.h"
 #endif
 
-#endif // __NONAGLESYNCCLIENT_H__
+#endif // PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_H
