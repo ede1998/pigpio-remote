@@ -18,7 +18,7 @@ namespace pigpio_remote
         {
         private:
             friend class BaseNoNagleSyncClient;
-            SyncClientInternal _client;
+            SyncClient _client;
 
             inline ConnectionError InternalConnect(const char *ip, uint16_t port)
             {
