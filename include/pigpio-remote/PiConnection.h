@@ -3,7 +3,7 @@
 
 #include "../../src/platform/NoNagleSyncClient.h"
 #include "PigpioError.h"
-#include "../../src/socket_command.h"
+#include "../../src/pigpio-communication/SocketCommand.h"
 #include <string>
 #include <chrono>
 
@@ -12,7 +12,7 @@ struct SendCommandResult
     int Result;
     PigpioError Error;
 
-    static SendCommandResult create(int result)
+    static SendCommandResult Create(int result)
     {
         SendCommandResult res;
         res.Error = PigpioError::PI_OK;
@@ -20,7 +20,7 @@ struct SendCommandResult
         return res;
     }
 
-    static SendCommandResult create(PigpioError error)
+    static SendCommandResult Create(PigpioError error)
     {
         SendCommandResult res;
         res.Error = error;
@@ -28,17 +28,15 @@ struct SendCommandResult
     }
 };
 
-template <typename result_t, typename error_t>
-PigpioResult<result_t, error_t> make_result(SendCommandResult result)
+template <typename ResultT, typename ErrorT>
+PigpioResult<ResultT, ErrorT> MakeResult(SendCommandResult result)
 {
     if (result.Error == PigpioError::PI_OK)
     {
-        return PigpioResult<result_t, error_t>(static_cast<result_t>(result.Result));
+        return PigpioResult<ResultT, ErrorT>(static_cast<ResultT>(result.Result));
     }
-    else
-    {
-        return PigpioResult<result_t, error_t>(result.Error);
-    }
+
+    return PigpioResult<ResultT, ErrorT>(result.Error);
 }
 
 class PiConnection
@@ -49,16 +47,16 @@ private:
 public:
     PiConnection() = default;
     ~PiConnection();
-    ConnectionError connect(uint16_t port = 0);
-    ConnectionError connect(const std::string &addr, uint16_t port = 0);
-    ConnectionError connect(const char *addr, uint16_t port = 0);
-    bool connected() const;
+    ConnectionError Connect(uint16_t port = 0);
+    ConnectionError Connect(const std::string &addr, uint16_t port = 0);
+    ConnectionError Connect(const char *addr, uint16_t port = 0);
+    bool Connected() const;
 
-    void stop();
+    void Stop();
 
-    SendCommandResult send_command(SocketCommand command, uint32_t parameter1, uint32_t parameter2 = UNUSED_PARAMETER);
+    SendCommandResult SendCommand(SocketCommand command, uint32_t parameter1, uint32_t parameter2 = UNUSED_PARAMETER);
 
-    NoNagleSyncClient get_connection();
+    NoNagleSyncClient GetConnection();
     static constexpr uint16_t DEFAULT_PORT = 8888;
     static constexpr const char *DEFAULT_ADDRESS = "localhost";
     static constexpr const char *ENV_ADDRESS = "PIGPIO_ADDR";

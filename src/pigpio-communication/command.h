@@ -52,42 +52,42 @@ This version is for pigpio version 70+
 
 typedef struct
 {
-   uint32_t cmd;
-   uint32_t p1;
-   uint32_t p2;
+   uint32_t Cmd;
+   uint32_t P1;
+   uint32_t P2;
    union
    {
-      uint32_t p3;
-      uint32_t ext_len;
-      uint32_t res;
+      uint32_t P3;
+      uint32_t ExtLen;
+      uint32_t Res;
    };
 } cmdCmd_t;
 
 typedef struct
 {
-   int    eaten;
-   int8_t opt[4];
+   int    Eaten;
+   int8_t Opt[4];
 } cmdCtlParse_t;
 
 typedef struct
 {
-   int   cmd;  /* command number            */
-   char *name; /* command name              */
-   int   vt;   /* command verification type */
-   int   rv;   /* command return value type */
-   int   cvis; /* command valid in a script */
+   int   Cmd;  /* command number            */
+   char *Name; /* command name              */
+   int   Vt;   /* command verification type */
+   int   Rv;   /* command return value type */
+   int   Cvis; /* command valid in a script */
 } cmdInfo_t;
 
 typedef struct
 {
-   uint32_t tag;
-   int      step;
+   uint32_t Tag;
+   int      Step;
 } cmdTagStep_t;
 
 typedef struct
 {
-   uintptr_t p[5]; //these are sometimes converted to pointers, so presumablly they sometimes have pointers stored in them, I haven't figured out where though. --plugwash
-   int8_t opt[4];
+   uintptr_t P[5]; //these are sometimes converted to pointers, so presumablly they sometimes have pointers stored in them, I haven't figured out where though. --plugwash
+   int8_t Opt[4];
 } cmdInstr_t;
 
 typedef struct
@@ -97,26 +97,26 @@ typedef struct
      | PARAMS... | VARS... | CMDS... | STRING AREA... |
      +-----------+---------+---------+----------------+
    */
-   int *par;
-   int *var;
-   cmdInstr_t *instr;
-   int instrs;
-   char *str_area;
-   int str_area_len;
-   int str_area_pos;
+   int *Par;
+   int *Var;
+   cmdInstr_t *Instr;
+   int Instrs;
+   char *StrArea;
+   int StrAreaLen;
+   int StrAreaPos;
 } cmdScript_t;
 
-extern cmdInfo_t cmdInfo[];
+extern cmdInfo_t cmd_info[];
 
-extern char *cmdUsage;
+extern char *cmd_usage;
 
-int cmdParse(char *buf, uintptr_t *p, unsigned ext_len, char *ext, cmdCtlParse_t *ctl);
+int CmdParse(char *buf, uintptr_t *p, unsigned ext_len, char *ext, cmdCtlParse_t *ctl);
 
-int cmdParseScript(char *script, cmdScript_t *s, int diags);
+int CmdParseScript(char *script, cmdScript_t *s, int diags);
 
-char *cmdErrStr(int error);
+char *CmdErrStr(int error);
 
-char *cmdStr(void);
+char *CmdStr(void);
 
 #endif
 

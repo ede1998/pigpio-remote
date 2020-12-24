@@ -20,7 +20,7 @@ private:
     friend class BaseNoNagleSyncClient;
     int _socket;
 
-    inline ConnectionError _connect(const char *ip, uint16_t port)
+    ConnectionError InternalConnect(const char *ip, uint16_t port)
     {
         int sock, err, opt;
         struct addrinfo hints, *res, *rp;
@@ -61,28 +61,28 @@ private:
         return ConnectionError::SUCCESS;
     }
 
-    inline bool _connected() const
+    inline bool InternalConnected() const
     {
         return this->_socket >= 0;
     }
 
-    inline int _available() const
+    inline int InternalAvailable() const
     {
         assert(false && "Not implemented.");
         return -1;
     }
 
-    inline int _read(uint8_t *data, size_t len)
+    inline int InternalRead(uint8_t *data, size_t len)
     {
         return recv(this->_socket, data, len, MSG_WAITALL);
     }
 
-    inline size_t _write(const uint8_t *data, size_t len)
+    inline size_t InternalWrite(const uint8_t *data, size_t len)
     {
         return send(this->_socket, data, len, 0);
     }
 
-    inline void _stop()
+    inline void InternalStop()
     {
         close(this->_socket);
         this->_socket = -1;

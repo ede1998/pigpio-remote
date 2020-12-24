@@ -54,13 +54,13 @@ private:
     PiConnection &_connection;
 
 public:
-    BasicIo(PiConnection &connection);
+    explicit BasicIo(PiConnection &connection);
 
-    GpioModeError set_mode(unsigned int gpio, GpioMode mode);
-    PigpioResult<GpioMode, GpioReadError> get_mode(unsigned int gpio);
-    GpioPullUpDownError set_pull_up_down(unsigned int gpio, GpioPullUpDown pud);
-    PigpioResult<GpioLevel, GpioReadError> gpio_read(unsigned int gpio);
-    GpioWriteError gpio_write(unsigned int gpio, GpioLevel level);
+    GpioModeError SetMode(unsigned int gpio, GpioMode mode);
+    PigpioResult<GpioMode, GpioReadError> GetMode(unsigned int gpio);
+    GpioPullUpDownError SetPullUpDown(unsigned int gpio, GpioPullUpDown pud);
+    PigpioResult<GpioLevel, GpioReadError> Read(unsigned int gpio);
+    GpioWriteError Write(unsigned int gpio, GpioLevel level);
 };
 
 #endif // _PIGPIO_WRAPPER_BASICIO

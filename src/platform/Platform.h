@@ -1,12 +1,12 @@
 #ifndef __PLATFORM_H__
 #define __PLATFORM_H__
 
-#include "../include/pigpio-remote/configuration.h"
+#include "../include/pigpio-remote/Configuration.h"
 
 #ifdef PIGPIO_REMOTE_PLATFORM_ARDUINO
 #include "Arduino.h"
 
-inline void wait(unsigned long ms)
+inline void Wait(unsigned long ms)
 {
     delay(ms);
 }
@@ -16,7 +16,7 @@ inline void wait(unsigned long ms)
 #include <ctime>
 #include <cerrno>
 #include <cassert>
-void wait(long msec)
+void Wait(long msec)
 {
     struct timespec ts;
     int res;
