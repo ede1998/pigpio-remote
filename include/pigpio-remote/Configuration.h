@@ -15,7 +15,7 @@ namespace pigpio_remote
     {
         constexpr unsigned int PIGPIO_INTERFACE = 78;
         constexpr unsigned int MAJOR = 0;
-        constexpr unsigned int MINOR = 7;
+        constexpr unsigned int MINOR = 8;
         constexpr unsigned int PATCH = 0;
     } // namespace version
 

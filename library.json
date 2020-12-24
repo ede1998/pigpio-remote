@@ -1,7 +1,7 @@
 {
     "name": "pigpio-remote",
-    "version": "0.7.0",
-    "description": "Remotely control the GPIO pins of a Raspberry Pi over the network. This library communicates with a Pigpio daemon (http://abyz.me.uk/rpi/pigpio)",
+    "version": "0.8.0",
+    "description": "Remotely control the GPIO pins of a Raspberry Pi over the network. This library communicates with a Pigpio daemon (http://abyz.me.uk/rpi/pigpio).",
     "repository": {
         "type": "git",
         "url": "https://github.com/ede1998/pigpio-remote/"
