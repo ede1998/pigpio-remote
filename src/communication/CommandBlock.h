@@ -1,5 +1,5 @@
-#ifndef __COMMANDBLOCK_H__
-#define __COMMANDBLOCK_H__
+#ifndef PIGPIO_REMOTE_SRC_COMMUNICATION_COMMANDBLOCK_H
+#define PIGPIO_REMOTE_SRC_COMMUNICATION_COMMANDBLOCK_H
 
 namespace pigpio_remote
 {
@@ -23,4 +23,4 @@ namespace pigpio_remote
 
 } // namespace pigpio_remote
 
-#endif // __COMMANDBLOCK_H__
+#endif // PIGPIO_REMOTE_SRC_COMMUNICATION_COMMANDBLOCK_H

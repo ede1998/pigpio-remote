@@ -1,5 +1,5 @@
-#ifndef __SENDCOMMANDRESULT_H__
-#define __SENDCOMMANDRESULT_H__
+#ifndef PIGPIO_REMOTE_SRC_PICONNECTIONINTERNALS_H
+#define PIGPIO_REMOTE_SRC_PICONNECTIONINTERNALS_H
 
 #include "../include/pigpio-remote/PigpioError.h"
 
@@ -44,4 +44,4 @@ namespace pigpio_remote
 
 } // namespace pigpio_remote
 
-#endif // __SENDCOMMANDRESULT_H__
+#endif // PIGPIO_REMOTE_SRC_PICONNECTIONINTERNALS_H

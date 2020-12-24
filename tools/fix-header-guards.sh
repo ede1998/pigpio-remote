@@ -94,7 +94,7 @@ fix_header() {
 	header_guard=`echo "$header_guard" | sed 's/.*/\U\0\E/' | sed 's:[-_/.]:_:g'`
 	print_verbose "Header guard $header_guard."
 	if [ "$dry_run" = false ]; then
-		sed -i '/#ifndef/,/#define/ s/ .*$'"/ $header_guard /" "$file_path"
+		sed -i '/#ifndef/,/#define/ s/ .*$'"/ $header_guard/" "$file_path"
 		sed -i "$(sed -n '/#endif/ =' $file_path | tail -n 1)"' s: .*$:'" // $header_guard:" "$file_path"
 	else
 		echo "Setting header guard '$header_guard' for file '$file_path'."
