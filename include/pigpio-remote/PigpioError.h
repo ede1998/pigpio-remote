@@ -2,6 +2,7 @@
 #define __PIGPIOERROR_H__
 
 #include "../../external/tl/optional.hpp"
+#include "../../src/pigpio-communication/ErrorCode.h"
 
 template <PigpioError... allowed_errors>
 class BasicPigpioErrorView
