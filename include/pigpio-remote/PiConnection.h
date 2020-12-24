@@ -1,67 +1,41 @@
-#ifndef PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PICONNECTION_H 
-#define PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PICONNECTION_H 
+#ifndef PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PICONNECTION_H
+#define PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PICONNECTION_H
 
 #include "../../src/platform/NoNagleSyncClient.h"
 #include "PigpioError.h"
-#include "../../src/pigpio-communication/SocketCommand.h"
+#include "../../src/communication/Command.h"
+#include "../../src/PiConnectionInternals.h"
 #include <string>
 #include <chrono>
 
-struct SendCommandResult
+namespace pigpio_remote
 {
-    int Result;
-    PigpioError Error;
+    using platform::ConnectionError;
 
-    static SendCommandResult Create(int result)
+    class PiConnection
     {
-        SendCommandResult res;
-        res.Error = PigpioError::PI_OK;
-        res.Result = result;
-        return res;
-    }
+    private:
+        platform::NoNagleSyncClient _client;
 
-    static SendCommandResult Create(PigpioError error)
-    {
-        SendCommandResult res;
-        res.Error = error;
-        return res;
-    }
-};
+    public:
+        PiConnection() = default;
+        ~PiConnection();
+        ConnectionError Connect(uint16_t port = 0);
+        ConnectionError Connect(const std::string &addr, uint16_t port = 0);
+        ConnectionError Connect(const char *addr, uint16_t port = 0);
+        bool Connected() const;
 
-template <typename ResultT, typename ErrorT>
-PigpioResult<ResultT, ErrorT> MakeResult(SendCommandResult result)
-{
-    if (result.Error == PigpioError::PI_OK)
-    {
-        return PigpioResult<ResultT, ErrorT>(static_cast<ResultT>(result.Result));
-    }
+        void Stop();
 
-    return PigpioResult<ResultT, ErrorT>(result.Error);
-}
+        internal::CommandResult SendCommand(communication::Command command, uint32_t parameter1, uint32_t parameter2 = UNUSED_PARAMETER);
 
-class PiConnection
-{
-private:
-    NoNagleSyncClient _client;
+        platform::NoNagleSyncClient GetConnection();
+        static constexpr uint16_t DEFAULT_PORT = 8888;
+        static constexpr const char *DEFAULT_ADDRESS = "localhost";
+        static constexpr const char *ENV_ADDRESS = "PIGPIO_ADDR";
+        static constexpr const char *ENV_PORT = "PIGPIO_PORT";
+        static constexpr uint32_t UNUSED_PARAMETER = 0;
+    };
 
-public:
-    PiConnection() = default;
-    ~PiConnection();
-    ConnectionError Connect(uint16_t port = 0);
-    ConnectionError Connect(const std::string &addr, uint16_t port = 0);
-    ConnectionError Connect(const char *addr, uint16_t port = 0);
-    bool Connected() const;
-
-    void Stop();
-
-    SendCommandResult SendCommand(SocketCommand command, uint32_t parameter1, uint32_t parameter2 = UNUSED_PARAMETER);
-
-    NoNagleSyncClient GetConnection();
-    static constexpr uint16_t DEFAULT_PORT = 8888;
-    static constexpr const char *DEFAULT_ADDRESS = "localhost";
-    static constexpr const char *ENV_ADDRESS = "PIGPIO_ADDR";
-    static constexpr const char *ENV_PORT = "PIGPIO_PORT";
-    static constexpr uint32_t UNUSED_PARAMETER = 0;
-};
-
+} // namespace pigpio_remote
 #endif // PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PICONNECTION_H

@@ -1,5 +1,5 @@
-#ifndef PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_NONAGLESYNCCLIENTPOSIX_H 
-#define PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_NONAGLESYNCCLIENTPOSIX_H 
+#ifndef PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_NONAGLESYNCCLIENTPOSIX_H
+#define PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_NONAGLESYNCCLIENTPOSIX_H
 
 #ifdef PIGPIO_REMOTE_PLATFORM_POSIX
 
@@ -14,86 +14,96 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-class NoNagleSyncClient : public BaseNoNagleSyncClient<NoNagleSyncClient>
+namespace pigpio_remote
 {
-private:
-    friend class BaseNoNagleSyncClient;
-    int _socket;
 
-    ConnectionError InternalConnect(const char *ip, uint16_t port)
+    namespace platform
     {
-        int sock, err, opt;
-        struct addrinfo hints, *res, *rp;
 
-        std::memset(&hints, 0, sizeof(hints));
-
-        hints.ai_family = PF_UNSPEC;
-        hints.ai_socktype = SOCK_STREAM;
-        hints.ai_flags |= AI_CANONNAME;
-
-        err = getaddrinfo(ip, std::to_string(port).c_str(), &hints, &res);
-
-        if (err)
-            return ConnectionError::INVALID_SERVER;
-
-        for (rp = res; rp != NULL; rp = rp->ai_next)
+        class NoNagleSyncClient : public BaseNoNagleSyncClient<NoNagleSyncClient>
         {
-            sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+        private:
+            friend class BaseNoNagleSyncClient;
+            int _socket;
 
-            if (sock == -1)
-                continue;
+            ConnectionError InternalConnect(const char *ip, uint16_t port)
+            {
+                int sock, err, opt;
+                struct addrinfo hints, *res, *rp;
 
-            /* Disable the Nagle algorithm. */
-            opt = 1;
-            setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *)&opt, sizeof(int));
+                std::memset(&hints, 0, sizeof(hints));
 
-            if (::connect(sock, rp->ai_addr, rp->ai_addrlen) != -1)
-                break;
-        }
+                hints.ai_family = PF_UNSPEC;
+                hints.ai_socktype = SOCK_STREAM;
+                hints.ai_flags |= AI_CANONNAME;
 
-        freeaddrinfo(res);
+                err = getaddrinfo(ip, std::to_string(port).c_str(), &hints, &res);
 
-        if (rp == NULL)
-            return ConnectionError::INVALID_RESPONSE;
+                if (err)
+                    return ConnectionError::INVALID_SERVER;
 
-        this->_socket = sock;
+                for (rp = res; rp != NULL; rp = rp->ai_next)
+                {
+                    sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 
-        return ConnectionError::SUCCESS;
-    }
+                    if (sock == -1)
+                        continue;
 
-    inline bool InternalConnected() const
-    {
-        return this->_socket >= 0;
-    }
+                    /* Disable the Nagle algorithm. */
+                    opt = 1;
+                    setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *)&opt, sizeof(int));
 
-    inline int InternalAvailable() const
-    {
-        assert(false && "Not implemented.");
-        return -1;
-    }
+                    if (::connect(sock, rp->ai_addr, rp->ai_addrlen) != -1)
+                        break;
+                }
 
-    inline int InternalRead(uint8_t *data, size_t len)
-    {
-        return recv(this->_socket, data, len, MSG_WAITALL);
-    }
+                freeaddrinfo(res);
 
-    inline size_t InternalWrite(const uint8_t *data, size_t len)
-    {
-        return send(this->_socket, data, len, 0);
-    }
+                if (rp == NULL)
+                    return ConnectionError::INVALID_RESPONSE;
 
-    inline void InternalStop()
-    {
-        close(this->_socket);
-        this->_socket = -1;
-    }
+                this->_socket = sock;
 
-public:
-    NoNagleSyncClient()
-        : _socket(-1)
-    {
-    }
-};
+                return ConnectionError::SUCCESS;
+            }
+
+            inline bool InternalConnected() const
+            {
+                return this->_socket >= 0;
+            }
+
+            inline int InternalAvailable() const
+            {
+                assert(false && "Not implemented.");
+                return -1;
+            }
+
+            inline int InternalRead(uint8_t *data, size_t len)
+            {
+                return recv(this->_socket, data, len, MSG_WAITALL);
+            }
+
+            inline size_t InternalWrite(const uint8_t *data, size_t len)
+            {
+                return send(this->_socket, data, len, 0);
+            }
+
+            inline void InternalStop()
+            {
+                close(this->_socket);
+                this->_socket = -1;
+            }
+
+        public:
+            NoNagleSyncClient()
+                : _socket(-1)
+            {
+            }
+        };
+
+    } // namespace platform
+
+} // namespace pigpio_remote
 
 #endif // PIGPIO_REMOTE_PLATFORM_POSIX
 

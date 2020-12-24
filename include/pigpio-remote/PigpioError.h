@@ -1,78 +1,83 @@
-#ifndef PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PIGPIOERROR_H 
-#define PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PIGPIOERROR_H 
+#ifndef PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PIGPIOERROR_H
+#define PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PIGPIOERROR_H
 
 #include "../../external/tl/optional.hpp"
-#include "../../src/pigpio-communication/ErrorCode.h"
+#include "../../src/communication/ErrorCode.h"
 
-template <PigpioError... allowed_errors>
-class BasicPigpioErrorView
+namespace pigpio_remote
 {
-private:
-    const PigpioError _error;
+    using communication::PigpioError;
 
-    template <typename = void>
-    bool ErrorAllowed() const
+    template <communication::PigpioError... allowed_errors>
+    class BasicPigpioErrorView
     {
-        return false;
-    }
+    private:
+        const PigpioError _error;
 
-    // This way, code to compare all allowed errors to the one that occurred is generated at compile time.
-    // Source to make it work: https://stackoverflow.com/a/51000072
-    template <PigpioError e, PigpioError... others>
-    bool ErrorAllowed() const
+        template <typename = void>
+        bool ErrorAllowed() const
+        {
+            return false;
+        }
+
+        // This way, code to compare all allowed errors to the one that occurred is generated at compile time.
+        // Source to make it work: https://stackoverflow.com/a/51000072
+        template <PigpioError e, PigpioError... others>
+        bool ErrorAllowed() const
+        {
+            return this->_error == e || this->ErrorAllowed<others...>();
+        }
+
+        bool IsErrorAllowed() const
+        {
+            return ErrorAllowed<allowed_errors...>();
+        }
+
+    public:
+        BasicPigpioErrorView(const PigpioError error)
+            : _error(error)
+        {
+        }
+
+        operator PigpioError() const
+        {
+            return this->IsErrorAllowed() ? this->_error : PigpioError::PI_UNEXPECTED_ERROR;
+        }
+
+        operator int() const
+        {
+            return static_cast<int>(static_cast<PigpioError>(*this));
+        }
+
+        PigpioError GetError() const
+        {
+            return this->_error;
+        }
+    };
+
+    template <PigpioError... allowed_errors>
+    using PigpioErrorView = BasicPigpioErrorView<PigpioError::PI_OK,
+                                                 PigpioError::pigif_bad_send,
+                                                 PigpioError::pigif_bad_recv,
+                                                 PigpioError::pigif_unconnected_pi, allowed_errors...>;
+
+    template <typename ValueT, typename ErrorT>
+    class PigpioResult
     {
-        return this->_error == e || this->ErrorAllowed<others...>();
-    }
+    public:
+        tl::optional<ValueT> Value;
+        ErrorT Error;
 
-    bool IsErrorAllowed() const
-    {
-        return ErrorAllowed<allowed_errors...>();
-    }
+        PigpioResult(ValueT value)
+            : Value(value), Error(ErrorT(PigpioError::PI_OK))
+        {
+        }
 
-public:
-    BasicPigpioErrorView(const PigpioError error)
-        : _error(error)
-    {
-    }
+        PigpioResult(PigpioError error)
+            : Error(ErrorT(error))
+        {
+        }
+    };
 
-    operator PigpioError() const
-    {
-        return this->IsErrorAllowed() ? this->_error : PigpioError::PI_UNEXPECTED_ERROR;
-    }
-
-    operator int() const
-    {
-        return static_cast<int>(static_cast<PigpioError>(*this));
-    }
-
-    PigpioError GetError() const
-    {
-        return this->_error;
-    }
-};
-
-template <PigpioError... allowed_errors>
-using PigpioErrorView = BasicPigpioErrorView<PigpioError::PI_OK,
-                                             PigpioError::pigif_bad_send,
-                                             PigpioError::pigif_bad_recv,
-                                             PigpioError::pigif_unconnected_pi, allowed_errors...>;
-
-template <typename ValueT, typename ErrorT>
-class PigpioResult
-{
-public:
-    tl::optional<ValueT> Value;
-    ErrorT Error;
-
-    PigpioResult(ValueT value)
-        : Value(value), Error(ErrorT(PigpioError::PI_OK))
-    {
-    }
-
-    PigpioResult(PigpioError error)
-        : Error(ErrorT(error))
-    {
-    }
-};
-
+} // namespace pigpio_remote
 #endif // PIGPIO_REMOTE_INCLUDE_PIGPIO_REMOTE_PIGPIOERROR_H

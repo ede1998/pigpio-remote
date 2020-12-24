@@ -1,38 +1,46 @@
 #include "../include/pigpio-remote/BasicIo.h"
 
-#include "pigpio-communication/SocketCommand.h"
+#include "communication/Command.h"
 
-BasicIo::BasicIo(PiConnection &connection)
-    : _connection(connection)
+namespace pigpio_remote
 {
-}
 
-GpioModeError BasicIo::SetMode(unsigned int gpio, GpioMode mode)
-{
-    auto result = this->_connection.SendCommand(SocketCommand::PI_CMD_MODES, gpio, static_cast<uint32_t>(mode));
-    return {result.Error};
-}
+    using namespace communication;
+    using namespace internal;
 
-PigpioResult<GpioMode, GpioReadError> BasicIo::GetMode(unsigned int gpio)
-{
-    auto result = this->_connection.SendCommand(SocketCommand::PI_CMD_MODEG, gpio);
-    return MakeResult<GpioMode, GpioReadError>(result);
-}
+    BasicIo::BasicIo(PiConnection &connection)
+        : _connection(connection)
+    {
+    }
 
-GpioPullUpDownError BasicIo::SetPullUpDown(unsigned int gpio, GpioPullUpDown pud)
-{
-    auto result = this->_connection.SendCommand(SocketCommand::PI_CMD_PUD, gpio, static_cast<uint32_t>(pud));
-    return {result.Error};
-}
+    GpioModeError BasicIo::SetMode(unsigned int gpio, GpioMode mode)
+    {
+        auto result = this->_connection.SendCommand(Command::PI_CMD_MODES, gpio, static_cast<uint32_t>(mode));
+        return {result.Error};
+    }
 
-PigpioResult<GpioLevel, GpioReadError> BasicIo::Read(unsigned int gpio)
-{
-    auto result = this->_connection.SendCommand(SocketCommand::PI_CMD_READ, gpio);
-    return MakeResult<GpioLevel, GpioReadError>(result);
-}
+    PigpioResult<GpioMode, GpioReadError> BasicIo::GetMode(unsigned int gpio)
+    {
+        auto result = this->_connection.SendCommand(Command::PI_CMD_MODEG, gpio);
+        return MakeResult<GpioMode, GpioReadError>(result);
+    }
 
-GpioWriteError BasicIo::Write(unsigned int gpio, GpioLevel level)
-{
-    auto result = this->_connection.SendCommand(SocketCommand::PI_CMD_WRITE, gpio, static_cast<uint32_t>(level));
-    return {result.Error};
-}
+    GpioPullUpDownError BasicIo::SetPullUpDown(unsigned int gpio, GpioPullUpDown pud)
+    {
+        auto result = this->_connection.SendCommand(Command::PI_CMD_PUD, gpio, static_cast<uint32_t>(pud));
+        return {result.Error};
+    }
+
+    PigpioResult<GpioLevel, GpioReadError> BasicIo::Read(unsigned int gpio)
+    {
+        auto result = this->_connection.SendCommand(Command::PI_CMD_READ, gpio);
+        return MakeResult<GpioLevel, GpioReadError>(result);
+    }
+
+    GpioWriteError BasicIo::Write(unsigned int gpio, GpioLevel level)
+    {
+        auto result = this->_connection.SendCommand(Command::PI_CMD_WRITE, gpio, static_cast<uint32_t>(level));
+        return {result.Error};
+    }
+
+} // namespace pigpio_remote
