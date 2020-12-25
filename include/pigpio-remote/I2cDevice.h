@@ -100,6 +100,9 @@ namespace pigpio_remote
          */
         explicit I2cDevice(PiConnection &connection) : _connection(connection) {}
 
+        I2cDevice(const I2cDevice& device) = delete;
+        I2cDevice& operator=(const I2cDevice& device) = delete;
+
         /**
          * @brief Opens a connection to the specified I2C address.
          *

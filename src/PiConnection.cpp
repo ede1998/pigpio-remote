@@ -112,7 +112,8 @@ namespace pigpio_remote
 
         //if (rl) _pmu(pi);
 
-        return cmd.Res >= 0 ? CommandResult::Create(cmd.Res)
+        // error codes are negative => cast to signed type
+        return static_cast<int32_t>(cmd.Res) >= 0 ? CommandResult::Create(cmd.Res)
                             : CommandResult::Create(static_cast<PigpioError>(cmd.Res));
     }
 
@@ -156,7 +157,8 @@ namespace pigpio_remote
         }
         // if (rl) _pmu(pi);
 
-        return cmd.Res >= 0 ? CommandResult::Create(cmd.Res)
+        // error codes are negative => cast to signed type
+        return static_cast<int32_t>(cmd.Res) >= 0 ? CommandResult::Create(cmd.Res)
                             : CommandResult::Create(static_cast<PigpioError>(cmd.Res));
     }
 

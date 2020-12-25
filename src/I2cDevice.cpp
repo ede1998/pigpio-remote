@@ -9,14 +9,25 @@ namespace pigpio_remote
     using namespace communication;
     using namespace internal;
 
+    inline const uint8_t *Begin(const uint32_t &data)
+    {
+        return reinterpret_cast<const uint8_t *>(&data);
+    }
+
+    inline const uint8_t *End(const uint32_t &data)
+    {
+        const auto begin = Begin(data);
+        return begin + sizeof(data);
+    }
+
     I2cOpenError I2cDevice::Open(const uint8_t address, const unsigned int bus)
     {
         if (this->_handle != INVALID_HANDLE)
             return {PigpioError::PI_I2C_CONNECTION_OPENED_ALREADY};
 
-        uint32_t i2c_flags = 0;
+        const uint32_t i2c_flags = 0;
         const std::array<uint32_t, 3> parameters = {bus, address, sizeof(i2c_flags)};
-        const std::vector<uint8_t> data(&i2c_flags, &i2c_flags + sizeof(i2c_flags));
+        const std::vector<uint8_t> data(Begin(i2c_flags), End(i2c_flags));
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CO, parameters, data);
 
@@ -78,10 +89,10 @@ namespace pigpio_remote
     {
         if (this->_handle == INVALID_HANDLE)
             return {PigpioError::PI_BAD_HANDLE};
-        
+
         const uint32_t data_32 = data;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), i2c_reg, sizeof(data_32)};
-        const std::vector<uint8_t> buffer(&data_32, &data_32 + sizeof(data_32));
+        const std::vector<uint8_t> buffer(Begin(data_32), End(data_32));
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CWB, parameters, buffer);
         return {result.Error};
@@ -103,7 +114,7 @@ namespace pigpio_remote
 
         const uint32_t data_32 = data;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), i2c_reg, sizeof(data_32)};
-        const std::vector<uint8_t> buffer(&data_32, &data_32 + sizeof(data_32));
+        const std::vector<uint8_t> buffer(Begin(data_32), End(data_32));
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CWW, parameters, buffer);
         return {result.Error};
@@ -125,7 +136,7 @@ namespace pigpio_remote
 
         const uint32_t data_32 = data_word;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), i2c_reg, sizeof(data_32)};
-        const std::vector<uint8_t> buffer(&data_32, &data_32 + sizeof(data_32));
+        const std::vector<uint8_t> buffer(Begin(data_32), End(data_32));
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CPC, parameters, buffer);
         return MakeResult<uint16_t, I2cReadError>(result);
@@ -231,7 +242,7 @@ namespace pigpio_remote
 
         const uint32_t count_32 = count;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), i2c_reg, sizeof(count_32)};
-        const std::vector<uint8_t> buffer(&count_32, &count_32 + sizeof(count_32));
+        const std::vector<uint8_t> buffer(Begin(count_32), End(count_32));
 
         //_pml(pi);
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CRI, parameters, buffer);
@@ -298,7 +309,8 @@ namespace pigpio_remote
             auto data = this->_connection.ReceiveExtraData(result.Result, result.Result);
 
             //_pmu(pi);
-            return {data};;
+            return {data};
+            ;
         }
 
         //_pmu(pi);

@@ -1,33 +1,29 @@
 #include <iostream>
-#include <pigpio-remote/BasicIo.h>
+#include <pigpio-remote/I2cDevice.h>
 #include <pigpio-remote/PiConnection.h>
+#include <chrono>
+#include <thread>
 
-constexpr unsigned int GPIO_PIN = 17;
-constexpr unsigned int LONG_DURATION = 4;
-constexpr unsigned int SHORT_DURATION = 1;
+constexpr uint8_t I2C_ADDRESS = 0x21;
 
-void Blink(pigpio_remote::BasicIo &io, unsigned int duration)
+void ToggleAll(pigpio_remote::I2cDevice &device)
 {
-    io.Write(GPIO_PIN, pigpio_remote::GpioLevel::PI_HIGH);
-    sleep(duration);
-    io.Write(GPIO_PIN, pigpio_remote::GpioLevel::PI_LOW);
-    sleep(SHORT_DURATION);
-}
+    uint8_t data = 0;
 
-void SendS(pigpio_remote::BasicIo &io)
-{
-    std::cout << "Sending S." << std::endl;
-    Blink(io, LONG_DURATION);
-    Blink(io, LONG_DURATION);
-    Blink(io, LONG_DURATION);
-}
-
-void SendO(pigpio_remote::BasicIo &io)
-{
-    std::cout << "Sending O." << std::endl;
-    Blink(io, SHORT_DURATION);
-    Blink(io, SHORT_DURATION);
-    Blink(io, SHORT_DURATION);
+    for (int i = 0; i < 20; ++i)
+    {
+        data ^= 0xFF;
+        auto write_result = device.WriteByte(data);
+        if (write_result == pigpio_remote::PigpioError::PI_OK)
+        {
+            std::cout << "Wrote " << static_cast<int>(data) << " successfully." << std::endl;
+        }
+        else
+        {
+            std::cout << "Write failed with error code " << static_cast<int>(write_result) << "." << std::endl;
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
 }
 
 int main(int argc, char **argv)
@@ -38,7 +34,7 @@ int main(int argc, char **argv)
     std::cout << "Connecting to " << ip << ":" << port << "..." << std::endl;
 
     pigpio_remote::PiConnection connection;
-    pigpio_remote::BasicIo io(connection);
+    pigpio_remote::I2cDevice device(connection);
     auto result = connection.Connect(ip, std::stoul(port));
 
     if (result == pigpio_remote::ConnectionError::SUCCESS)
@@ -51,22 +47,21 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    auto set_mode_result = io.SetMode(GPIO_PIN, pigpio_remote::GpioMode::PI_OUTPUT);
-    if (set_mode_result == pigpio_remote::PigpioError::PI_OK)
+    auto open_result = device.Open(I2C_ADDRESS);
+    if (open_result == pigpio_remote::PigpioError::PI_OK)
     {
-        std::cout << "Pin " << GPIO_PIN << " set to output." << std::endl;
+        std::cout << "Opened I2C connection to device on address " << std::hex << static_cast<int>(device.GetAddress()) << "." << std::endl;
     }
     else
     {
-        std::cout << "Could not set pin " << GPIO_PIN << " to output. Error code: " << set_mode_result << std::endl;
+        std::cout << "Could not open connection. Error code: " << static_cast<int>(open_result) << std::endl;
         connection.Stop();
         return 0;
     }
 
-    SendS(io);
-    SendO(io);
-    SendS(io);
+    ToggleAll(device);
 
+    device.Close();
     connection.Stop();
 
     return 0;

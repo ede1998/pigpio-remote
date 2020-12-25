@@ -15,7 +15,7 @@ namespace pigpio_remote
          {
             uint32_t P3;
             uint32_t ExtLen;
-            uint32_t Res;
+            int32_t Res;
          };
       };
 
