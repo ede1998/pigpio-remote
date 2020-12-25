@@ -98,6 +98,17 @@ namespace pigpio_remote
         internal::CommandResult SendCommand(communication::Command command, const std::array<uint32_t, 3> &parameters, const std::vector<uint8_t> &data);
 
         /**
+         * @brief Internal library method.
+         * 
+         * Receives \p receive_bytes over the connection and returns the first \p return_bytes of them.
+         * 
+         * @param receive_bytes number of bytes to receive
+         * @param return_bytes number of bytes to return
+         * @return std::vector<uint8_t> the data that was received (`return_bytes` at most)
+         */
+        std::vector<uint8_t> ReceiveExtraData(uint32_t receive_bytes, uint32_t return_bytes);
+
+        /**
          * @brief Get the Connection object
          * 
          * @return platform::NoNagleSyncClient Returns the interInternal class that abstract 

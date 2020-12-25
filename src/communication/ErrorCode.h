@@ -10,6 +10,7 @@ namespace pigpio_remote
         enum class PigpioError
         {
             PI_UNEXPECTED_ERROR = 1000, // an error occurred that is not valid for called method
+            PI_I2C_CONNECTION_OPENED_ALREADY = 999,
             pigif_bad_send = -2000,
             pigif_bad_recv = -2001,
             pigif_bad_getaddrinfo = -2002,
