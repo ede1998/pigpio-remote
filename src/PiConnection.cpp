@@ -1,5 +1,6 @@
 #include "../include/pigpio-remote/PiConnection.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <limits>
 
@@ -157,6 +158,36 @@ namespace pigpio_remote
 
         return cmd.Res >= 0 ? CommandResult::Create(cmd.Res)
                             : CommandResult::Create(static_cast<PigpioError>(cmd.Res));
+    }
+
+    std::vector<uint8_t> PiConnection::ReceiveExtraData(uint32_t receive_bytes, uint32_t return_bytes)
+    {
+        const auto data_size = std::min(return_bytes, receive_bytes);
+
+        if (!this->Connected() || data_size == 0)
+        {
+            return {};
+        }
+
+        std::vector<uint8_t> data(data_size);
+
+        if (this->_client.Read(reinterpret_cast<uint8_t *>(&data), data_size) != data_size)
+        {
+            return {};
+        }
+
+        auto remaining_bytes = std::min(0U, receive_bytes - return_bytes);
+        constexpr auto DISCARD_BUFFER_SIZE = 64U;
+        uint8_t discard_buffer[DISCARD_BUFFER_SIZE];
+
+        while (remaining_bytes > 0)
+        {
+            const auto fetch_bytes = std::min(DISCARD_BUFFER_SIZE, remaining_bytes);
+            this->_client.Read(discard_buffer, DISCARD_BUFFER_SIZE);
+            remaining_bytes -= fetch_bytes;
+        }
+
+        return data;
     }
 
     NoNagleSyncClient PiConnection::GetConnection()

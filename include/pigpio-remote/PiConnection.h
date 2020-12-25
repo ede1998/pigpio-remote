@@ -100,7 +100,8 @@ namespace pigpio_remote
         /**
          * @brief Internal library method.
          * 
-         * Receives \p receive_bytes over the connection and returns the first \p return_bytes of them.
+         * Receives \p receive_bytes over the connection and returns at most the first \p return_bytes of them.
+         * The remaining bytes are discarded.
          * 
          * @param receive_bytes number of bytes to receive
          * @param return_bytes number of bytes to return
