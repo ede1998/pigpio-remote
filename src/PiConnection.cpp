@@ -90,7 +90,7 @@ namespace pigpio_remote
             return CommandResult::Create(PigpioError::pigif_unconnected_pi);
         }
 
-        CommandBlock cmd;
+        CommandBlock cmd = {};
         cmd.Cmd = static_cast<uint32_t>(command);
         cmd.P1 = parameter1;
         cmd.P2 = parameter2;
@@ -124,9 +124,7 @@ namespace pigpio_remote
             return CommandResult::Create(PigpioError::pigif_unconnected_pi);
         }
 
-        int i;
-        CommandBlock cmd;
-
+        CommandBlock cmd = {};
         cmd.Cmd = static_cast<uint32_t>(command);
         cmd.P1 = parameters[0];
         cmd.P2 = parameters[1];
@@ -179,13 +177,13 @@ namespace pigpio_remote
         }
 
         auto remaining_bytes = std::min(0U, receive_bytes - return_bytes);
-        constexpr auto DISCARD_BUFFER_SIZE = 64U;
-        uint8_t discard_buffer[DISCARD_BUFFER_SIZE];
+        constexpr auto discard_buffer_size = 64U;
+        std::array<uint8_t, discard_buffer_size> discard_buffer = {};
 
         while (remaining_bytes > 0)
         {
-            const auto fetch_bytes = std::min(DISCARD_BUFFER_SIZE, remaining_bytes);
-            this->_client.Read(discard_buffer, DISCARD_BUFFER_SIZE);
+            const auto fetch_bytes = std::min(discard_buffer_size, remaining_bytes);
+            this->_client.Read(discard_buffer.data(), discard_buffer_size);
             remaining_bytes -= fetch_bytes;
         }
 

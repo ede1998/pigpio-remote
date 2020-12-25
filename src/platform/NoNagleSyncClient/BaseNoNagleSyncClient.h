@@ -1,8 +1,8 @@
 #ifndef PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_BASENONAGLESYNCCLIENT_H
 #define PIGPIO_REMOTE_SRC_PLATFORM_NONAGLESYNCCLIENT_BASENONAGLESYNCCLIENT_H
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
 namespace pigpio_remote
 {

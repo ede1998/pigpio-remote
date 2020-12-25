@@ -1,7 +1,7 @@
 #include "../include/pigpio-remote/I2cDevice.h"
 
-#include <array>
 #include "communication/Command.h"
+#include <array>
 
 namespace pigpio_remote
 {
@@ -16,7 +16,7 @@ namespace pigpio_remote
 
     inline const uint8_t *End(const uint32_t &data)
     {
-        const auto begin = Begin(data);
+        const auto *const begin = Begin(data);
         return begin + sizeof(data);
     }
 
@@ -147,9 +147,9 @@ namespace pigpio_remote
         if (this->_handle == INVALID_HANDLE)
             return {PigpioError::PI_BAD_HANDLE};
 
-        constexpr uint32_t MAX_DATA_TO_TRANSFER = 32;
+        constexpr uint32_t max_data_to_transfer = 32;
 
-        if (data.size() > MAX_DATA_TO_TRANSFER)
+        if (data.size() > max_data_to_transfer)
         {
             return {PigpioError::PI_I2C_WRITE_FAILED};
         }
@@ -170,8 +170,8 @@ namespace pigpio_remote
 
         if (result.Error == PigpioError::PI_OK)
         {
-            constexpr uint32_t MAX_DATA_TO_RETURN = 32;
-            auto data = this->_connection.ReceiveExtraData(result.Result, MAX_DATA_TO_RETURN);
+            constexpr uint32_t max_data_to_return = 32;
+            auto data = this->_connection.ReceiveExtraData(result.Result, max_data_to_return);
 
             //_pmu(pi);
             return {data};
@@ -186,9 +186,9 @@ namespace pigpio_remote
         if (this->_handle == INVALID_HANDLE)
             return {PigpioError::PI_BAD_HANDLE};
 
-        constexpr uint32_t MAX_DATA_TO_TRANSFER = 32;
+        constexpr uint32_t max_data_to_transfer = 32;
 
-        if (data.size() > MAX_DATA_TO_TRANSFER)
+        if (data.size() > max_data_to_transfer)
         {
             return {PigpioError::PI_I2C_READ_FAILED};
         }
@@ -200,7 +200,7 @@ namespace pigpio_remote
 
         if (result.Error == PigpioError::PI_OK)
         {
-            auto data = this->_connection.ReceiveExtraData(result.Result, MAX_DATA_TO_TRANSFER);
+            auto data = this->_connection.ReceiveExtraData(result.Result, max_data_to_transfer);
 
             //_pmu(pi);
             return {data};
@@ -215,9 +215,9 @@ namespace pigpio_remote
         if (this->_handle == INVALID_HANDLE)
             return {PigpioError::PI_BAD_HANDLE};
 
-        constexpr uint32_t MAX_DATA_TO_TRANSFER = 32;
+        constexpr uint32_t max_data_to_transfer = 32;
 
-        if (data.size() > MAX_DATA_TO_TRANSFER)
+        if (data.size() > max_data_to_transfer)
         {
             return {PigpioError::PI_I2C_WRITE_FAILED};
         }
@@ -233,9 +233,9 @@ namespace pigpio_remote
         if (this->_handle == INVALID_HANDLE)
             return {PigpioError::PI_BAD_HANDLE};
 
-        constexpr uint32_t MAX_DATA_TO_TRANSFER = 32;
+        constexpr uint32_t max_data_to_transfer = 32;
 
-        if (count > MAX_DATA_TO_TRANSFER)
+        if (count > max_data_to_transfer)
         {
             return {PigpioError::PI_I2C_READ_FAILED};
         }
@@ -264,8 +264,8 @@ namespace pigpio_remote
         if (this->_handle == INVALID_HANDLE)
             return {PigpioError::PI_BAD_HANDLE};
 
-        constexpr uint32_t NO_REGISTER = 0;
-        const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), NO_REGISTER, static_cast<uint32_t>(data.size())};
+        constexpr uint32_t no_register = 0;
+        const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), no_register, static_cast<uint32_t>(data.size())};
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CWD, parameters, data);
         return {result.Error};
@@ -298,8 +298,8 @@ namespace pigpio_remote
         if (this->_handle == INVALID_HANDLE)
             return {PigpioError::PI_BAD_HANDLE};
 
-        constexpr uint32_t NO_REGISTER = 0;
-        const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), NO_REGISTER, static_cast<uint32_t>(input_sequence.size())};
+        constexpr uint32_t no_register = 0;
+        const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), no_register, static_cast<uint32_t>(input_sequence.size())};
 
         //_pml(pi);
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CZ, parameters, input_sequence);

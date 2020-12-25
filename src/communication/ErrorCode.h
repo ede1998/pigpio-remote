@@ -189,8 +189,8 @@ namespace pigpio_remote
             PI_ONLY_ON_BCM2711 = -146,              ///< only available on BCM2711
         };
 
-    } ///< namespace communication
+    } // namespace communication
 
-} ///< namespace pigpio_remote
+} // namespace pigpio_remote
 
-#endif ///< PIGPIO_REMOTE_SRC_COMMUNICATION_ERRORCODE_H
+#endif // PIGPIO_REMOTE_SRC_COMMUNICATION_ERRORCODE_H

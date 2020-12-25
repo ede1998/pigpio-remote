@@ -102,7 +102,7 @@ namespace pigpio_remote
      * @tparam ErrorT error type that might occur
      */
     template <typename ValueT, typename ErrorT>
-    class PigpioResult
+    struct PigpioResult
     {
     public:
         tl::optional<ValueT> Value;

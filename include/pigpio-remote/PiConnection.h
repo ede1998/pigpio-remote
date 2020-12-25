@@ -29,6 +29,12 @@ namespace pigpio_remote
         platform::NoNagleSyncClient _client;
 
     public:
+        PiConnection() = default;
+        PiConnection(const PiConnection& connection) = delete;
+        PiConnection(const PiConnection&& connection) = delete;
+        PiConnection& operator=(const PiConnection& connection) = delete;
+        PiConnection& operator=(const PiConnection&& connection) = delete;
+
         /**
          * @brief Destroy the Pi Connection object and close an open connection.
          */

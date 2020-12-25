@@ -15,7 +15,7 @@ namespace pigpio_remote
 
             static CommandResult Create(int result)
             {
-                CommandResult res;
+                CommandResult res = {};
                 res.Error = PigpioError::PI_OK;
                 res.Result = result;
                 return res;
@@ -23,7 +23,7 @@ namespace pigpio_remote
 
             static CommandResult Create(PigpioError error)
             {
-                CommandResult res;
+                CommandResult res = {};
                 res.Error = error;
                 return res;
             }

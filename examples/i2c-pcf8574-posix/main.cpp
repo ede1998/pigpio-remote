@@ -1,7 +1,7 @@
+#include <chrono>
 #include <iostream>
 #include <pigpio-remote/I2cDevice.h>
 #include <pigpio-remote/PiConnection.h>
-#include <chrono>
 #include <thread>
 
 constexpr uint8_t I2C_ADDRESS = 0x21;
@@ -12,7 +12,7 @@ void ToggleAll(pigpio_remote::I2cDevice &device)
 
     for (int i = 0; i < 20; ++i)
     {
-        data ^= 0xFF;
+        data ^= 0xFFU;
         auto write_result = device.WriteByte(data);
         if (write_result == pigpio_remote::PigpioError::PI_OK)
         {
