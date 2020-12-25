@@ -115,6 +115,50 @@ namespace pigpio_remote
                             : CommandResult::Create(static_cast<PigpioError>(cmd.Res));
     }
 
+    internal::CommandResult PiConnection::SendCommand(communication::Command command, const std::array<uint32_t, 3> &parameters, const std::vector<uint8_t> &data)
+    {
+        if (!this->Connected())
+        {
+            return CommandResult::Create(PigpioError::pigif_unconnected_pi);
+        }
+
+        int i;
+        CommandBlock cmd;
+
+        cmd.Cmd = static_cast<uint32_t>(command);
+        cmd.P1 = parameters[0];
+        cmd.P2 = parameters[1];
+        cmd.P3 = parameters[2];
+
+        // _pml(pi);
+
+        if (this->_client.Write(reinterpret_cast<uint8_t *>(&cmd), sizeof(cmd)) != sizeof(cmd))
+        {
+            //_pmu(pi);
+            return CommandResult::Create(PigpioError::pigif_bad_send);
+        }
+
+        const auto data_bytes = data.size(); // elements of data are uint8_t so 1 byte each
+
+        // The original code uses a for loop here and gets an array of buffers as parameter instead of a single large buffer.
+        // Since TCP is stream based this shouldn't matter but maybe it does, so watch out if you have trouble with this extended SendCommand method.
+        if (this->_client.Write(data.data(), data_bytes) != data_bytes)
+        {
+            // _pmu(pi);
+            return CommandResult::Create(PigpioError::pigif_bad_send);
+        }
+
+        if (this->_client.Read(reinterpret_cast<uint8_t *>(&cmd), sizeof(cmd)) != sizeof(cmd))
+        {
+            //_pmu(pi);
+            return CommandResult::Create(PigpioError::pigif_bad_recv);
+        }
+        // if (rl) _pmu(pi);
+
+        return cmd.Res >= 0 ? CommandResult::Create(cmd.Res)
+                            : CommandResult::Create(static_cast<PigpioError>(cmd.Res));
+    }
+
     NoNagleSyncClient PiConnection::GetConnection()
     {
         return this->_client;
