@@ -23,12 +23,12 @@ namespace pigpio_remote
         /**
          * @brief Major version number of pigpio_remote library.
          */
-        constexpr unsigned int MAJOR = 0;
+        constexpr unsigned int MAJOR = 1;
 
         /**
          * @brief Minor version number of pigpio_remote library.
          */
-        constexpr unsigned int MINOR = 8;
+        constexpr unsigned int MINOR = 0;
 
         /**
          * @brief Patch number of pigpio_remote library.
