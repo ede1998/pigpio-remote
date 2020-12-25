@@ -49,6 +49,7 @@ namespace pigpio_remote
          * 
          * @param error Error code that is stored within the class.
          */
+        //NOLINTNEXTLINE(hicpp-explicit-conversions) Allows using initializer lists for return and makes life much easier.
         BasicPigpioErrorView(const PigpioError error)
             : _error(error)
         {
@@ -125,11 +126,13 @@ namespace pigpio_remote
         //NOLINTNEXTLINE(misc-non-private-member-variables-in-classes) Making this private seems stupid.
         ErrorT Error;
 
+        //NOLINTNEXTLINE(hicpp-explicit-conversions) Allows using initializer lists for return and makes life much easier.
         PigpioResult(ValueT value)
             : Value(value), Error(ErrorT(PigpioError::PI_OK))
         {
         }
 
+        //NOLINTNEXTLINE(hicpp-explicit-conversions) Allows using initializer lists for return and makes life much easier.
         PigpioResult(PigpioError error)
             : Error(ErrorT(error))
         {
