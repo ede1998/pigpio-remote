@@ -23,7 +23,9 @@ namespace pigpio_remote
     I2cOpenError I2cDevice::Open(const uint8_t address, const unsigned int bus)
     {
         if (this->_handle != INVALID_HANDLE)
+        {
             return {PigpioError::PI_I2C_CONNECTION_OPENED_ALREADY};
+        }
 
         const uint32_t i2c_flags = 0;
         const std::array<uint32_t, 3> parameters = {bus, address, sizeof(i2c_flags)};
@@ -44,7 +46,9 @@ namespace pigpio_remote
     I2cCloseError I2cDevice::Close()
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CC, this->_handle);
 
@@ -61,7 +65,9 @@ namespace pigpio_remote
     I2cWriteError I2cDevice::WriteQuick(const bool bit)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CWQ, this->_handle, static_cast<uint32_t>(bit));
         return {result.Error};
@@ -70,7 +76,9 @@ namespace pigpio_remote
     I2cWriteError I2cDevice::WriteByte(const uint8_t byte)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CWS, this->_handle, byte);
         return {result.Error};
@@ -79,7 +87,9 @@ namespace pigpio_remote
     PigpioResult<uint8_t, I2cReadError> I2cDevice::ReadByte()
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CRS, this->_handle);
         return MakeResult<uint8_t, I2cReadError>(result);
@@ -88,7 +98,9 @@ namespace pigpio_remote
     I2cWriteError I2cDevice::WriteByteData(const uint8_t i2c_reg, const uint8_t data)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         const uint32_t data_32 = data;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), i2c_reg, sizeof(data_32)};
@@ -101,7 +113,9 @@ namespace pigpio_remote
     PigpioResult<uint8_t, I2cReadError> I2cDevice::ReadByteData(const uint8_t i2c_reg)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CRB, this->_handle, i2c_reg);
         return MakeResult<uint8_t, I2cReadError>(result);
@@ -110,7 +124,9 @@ namespace pigpio_remote
     I2cWriteError I2cDevice::WriteWordData(const uint8_t i2c_reg, const uint16_t data)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         const uint32_t data_32 = data;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), i2c_reg, sizeof(data_32)};
@@ -123,7 +139,9 @@ namespace pigpio_remote
     PigpioResult<uint16_t, I2cReadError> I2cDevice::ReadWordData(const uint8_t i2c_reg)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CRW, this->_handle, i2c_reg);
         return MakeResult<uint16_t, I2cReadError>(result);
@@ -132,7 +150,9 @@ namespace pigpio_remote
     PigpioResult<uint16_t, I2cReadError> I2cDevice::ProcessCall(const uint8_t i2c_reg, const uint16_t data_word)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         const uint32_t data_32 = data_word;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), i2c_reg, sizeof(data_32)};
@@ -145,7 +165,9 @@ namespace pigpio_remote
     I2cWriteError I2cDevice::WriteBlockData(const uint8_t i2c_reg, const std::vector<uint8_t> &data)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         constexpr uint32_t max_data_to_transfer = 32;
 
@@ -163,7 +185,9 @@ namespace pigpio_remote
     PigpioResult<std::vector<uint8_t>, I2cReadError> I2cDevice::ReadBlockData(const uint8_t i2c_reg)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         //_pml(pi);
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CRK, this->_handle, i2c_reg);
@@ -184,7 +208,9 @@ namespace pigpio_remote
     PigpioResult<std::vector<uint8_t>, I2cReadError> I2cDevice::BlockProcessCall(const uint8_t i2c_reg, const std::vector<uint8_t> &data)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         constexpr uint32_t max_data_to_transfer = 32;
 
@@ -213,7 +239,9 @@ namespace pigpio_remote
     I2cWriteError I2cDevice::WriteI2cBlockData(const uint8_t i2c_reg, const std::vector<uint8_t> &data)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         constexpr uint32_t max_data_to_transfer = 32;
 
@@ -231,7 +259,9 @@ namespace pigpio_remote
     PigpioResult<std::vector<uint8_t>, I2cReadError> I2cDevice::ReadI2cBlockData(const uint8_t i2c_reg, const uint8_t count)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         constexpr uint32_t max_data_to_transfer = 32;
 
@@ -262,7 +292,9 @@ namespace pigpio_remote
     I2cWriteError I2cDevice::Write(const std::vector<uint8_t> &data)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         constexpr uint32_t no_register = 0;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), no_register, static_cast<uint32_t>(data.size())};
@@ -274,7 +306,9 @@ namespace pigpio_remote
     PigpioResult<std::vector<uint8_t>, I2cReadError> I2cDevice::Read(unsigned int count)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         const uint32_t count_32 = count;
 
@@ -296,7 +330,9 @@ namespace pigpio_remote
     PigpioResult<std::vector<uint8_t>, I2cZipError> I2cDevice::Zip(const std::vector<uint8_t> &input_sequence)
     {
         if (this->_handle == INVALID_HANDLE)
+        {
             return {PigpioError::PI_BAD_HANDLE};
+        }
 
         constexpr uint32_t no_register = 0;
         const std::array<uint32_t, 3> parameters = {static_cast<uint32_t>(this->_handle), no_register, static_cast<uint32_t>(input_sequence.size())};
