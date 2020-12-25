@@ -6,6 +6,10 @@ namespace pigpio_remote
    namespace communication
    {
 
+      /**
+       * @brief Data struct that is sent around to control the
+       * Pigpio daemon.
+       */
       struct CommandBlock
       {
          uint32_t Cmd;

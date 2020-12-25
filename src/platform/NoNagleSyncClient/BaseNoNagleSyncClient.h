@@ -10,6 +10,10 @@ namespace pigpio_remote
     namespace platform
     {
 
+        /**
+         * @brief Error codes that might be returned when trying to open
+         * a connection to the Pigpio daemon.
+         */
         enum class ConnectionError
         {
             SUCCESS = 0,

@@ -310,7 +310,6 @@ namespace pigpio_remote
 
             //_pmu(pi);
             return {data};
-            ;
         }
 
         //_pmu(pi);

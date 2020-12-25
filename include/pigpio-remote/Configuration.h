@@ -9,14 +9,42 @@
 #endif
 #endif
 
+#include <string>
+
 namespace pigpio_remote
 {
     namespace version
     {
+        /**
+         * @brief INTERFACE version of the Pigpio daemon to communicate with.
+         */
         constexpr unsigned int PIGPIO_INTERFACE = 78;
+
+        /**
+         * @brief Major version number of pigpio_remote library.
+         */
         constexpr unsigned int MAJOR = 0;
+
+        /**
+         * @brief Minor version number of pigpio_remote library.
+         */
         constexpr unsigned int MINOR = 8;
+
+        /**
+         * @brief Patch number of pigpio_remote library.
+         */
         constexpr unsigned int PATCH = 0;
+
+        /**
+         * @brief Semantic version number of the pigpio_remote library as a string.
+         * 
+         * @return std::string semantic version number
+         */
+        inline std::string GetVersion()
+        {
+            return std::to_string(MAJOR) + "." + std::to_string(MINOR) + "." + std::to_string(PATCH);
+        }
+
     } // namespace version
 
 } // namespace pigpio_remote

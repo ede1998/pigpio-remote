@@ -8,7 +8,10 @@ namespace pigpio_remote
 
     namespace communication
     {
-
+        /**
+         * @brief Internal enum containing all the different commands that
+         * the Pigpio daemon understands.
+         */
         enum class Command : uint32_t
         {
             PI_CMD_MODES = 0,
