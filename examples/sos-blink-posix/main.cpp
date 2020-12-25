@@ -58,7 +58,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        std::cout << "Could not set pin " << GPIO_PIN << " to output. Error code: " << set_mode_result << std::endl;
+        std::cout << "Could not set pin " << GPIO_PIN << " to output. Error code: " << static_cast<int>(set_mode_result) << std::endl;
         connection.Stop();
         return 0;
     }

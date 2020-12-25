@@ -28,16 +28,16 @@ namespace pigpio_remote
 
             ConnectionError InternalConnect(const char *ip, uint16_t port)
             {
-                int sock, err, opt;
-                struct addrinfo hints, *res, *rp;
-
-                std::memset(&hints, 0, sizeof(hints));
+                int sock = -1;
+                addrinfo hints = {};
+                addrinfo *res = nullptr;
+                addrinfo *rp = nullptr;
 
                 hints.ai_family = PF_UNSPEC;
                 hints.ai_socktype = SOCK_STREAM;
-                hints.ai_flags |= AI_CANONNAME;
+                hints.ai_flags |= AI_CANONNAME; //NOLINT(hicpp-signed-bitwise) This is the intended way to use the macro.
 
-                err = getaddrinfo(ip, std::to_string(port).c_str(), &hints, &res);
+                int err = getaddrinfo(ip, std::to_string(port).c_str(), &hints, &res);
 
                 if (err == 0)
                 {
@@ -54,8 +54,8 @@ namespace pigpio_remote
                     }
 
                     /* Disable the Nagle algorithm. */
-                    opt = 1;
-                    setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<char *>(&opt), sizeof(int));
+                    int opt = 1;
+                    setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<char *>(&opt), sizeof(opt));
 
                     if (::connect(sock, rp->ai_addr, rp->ai_addrlen) != -1)
                     {
@@ -82,6 +82,8 @@ namespace pigpio_remote
 
             static inline int InternalAvailable()
             {
+                // I have no idea what assert does internally and I don't care.
+                //NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay,hicpp-no-array-decay)
                 assert(false); // Not implemented.
                 return -1;
             }

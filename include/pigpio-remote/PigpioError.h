@@ -55,25 +55,40 @@ namespace pigpio_remote
         }
 
         /**
-         * @brief Transforms the class into a \p PigpioError.
+         * @brief Compares the class and a \p PigpioError.
          * 
-         * If the contained \p PigpioError is not an \p allowed_error, \p PigpioError::PI_UNEXPECTED_ERROR is returned instead.
+         * If the contained \p PigpioError in the class is not an \p allowed_error, \p PigpioError::PI_UNEXPECTED_ERROR is used
+         * for comparison.
          * 
-         * @return the error that occurred
+         * @return true if same error
+         * @return false if different error
          */
-        operator PigpioError() const
+        bool operator==(PigpioError error) const
+        {
+            auto externally_visible_error = static_cast<PigpioError>(*this);
+            return externally_visible_error == error;
+        }
+        
+        /**
+         * @brief Get the stored `PigpioError`.
+         * 
+         * If the error is not allowed, `PigpioError::PI_UNEXPECTED_ERROR` is returned instead.
+         * 
+         * @return PigpioError the error code
+         */
+        explicit operator PigpioError() const
         {
             return this->IsErrorAllowed() ? this->_error : PigpioError::PI_UNEXPECTED_ERROR;
         }
 
         /**
-         * @brief Transforms the error contained in the class into an int.
+         * @brief Get the stored `PigpioError`.
          * 
-         * If the contained \p PigpioError is not an \p allowed_error, \p static_cast<int>(PigpioError::PI_UNEXPECTED_ERROR) is returned instead.
+         * If the error is not allowed, `PigpioError::PI_UNEXPECTED_ERROR` is returned instead.
          * 
-         * @return the error that occurred
+         * @return PigpioError the error code
          */
-        operator int() const
+        explicit operator int() const
         {
             return static_cast<int>(static_cast<PigpioError>(*this));
         }
@@ -83,7 +98,7 @@ namespace pigpio_remote
          * 
          * @return the stored error 
          */
-        PigpioError GetError() const
+        PigpioError GetInternalError() const
         {
             return this->_error;
         }
@@ -102,10 +117,12 @@ namespace pigpio_remote
      * @tparam ErrorT error type that might occur
      */
     template <typename ValueT, typename ErrorT>
-    struct PigpioResult
+    class PigpioResult
     {
     public:
+        //NOLINTNEXTLINE(misc-non-private-member-variables-in-classes) Making this private seems stupid.
         tl::optional<ValueT> Value;
+        //NOLINTNEXTLINE(misc-non-private-member-variables-in-classes) Making this private seems stupid.
         ErrorT Error;
 
         PigpioResult(ValueT value)
