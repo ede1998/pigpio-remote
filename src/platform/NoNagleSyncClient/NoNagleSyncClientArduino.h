@@ -56,7 +56,6 @@ namespace pigpio_remote
                         elapsed_milliseconds = std::chrono::duration_cast<int_milliseconds_t>(current - start);
                     }
 
-                Serial.printf("Data bytes available now vs expected: %d / %d", this->_client.available(), len);
                 return this->_client.read(data, len);
             }
 
