@@ -7,6 +7,7 @@
 #include "SyncClient.h"
 #include "Arduino.h"
 #include "BaseNoNagleSyncClient.h"
+#include <chrono>
 
 namespace pigpio_remote
 {
@@ -16,9 +17,18 @@ namespace pigpio_remote
 
         class NoNagleSyncClient : public BaseNoNagleSyncClient<NoNagleSyncClient>
         {
+        public:
+            static constexpr int DEFAULT_SOCKET_TIMEOUT_SECONDS = 5;
+            NoNagleSyncClient()
+            {
+                this->_client.setTimeout(DEFAULT_SOCKET_TIMEOUT_SECONDS);
+            }
+
         private:
             friend class BaseNoNagleSyncClient;
             SyncClient _client;
+            using int_milliseconds_t = std::chrono::duration<int, std::milli>;
+            int_milliseconds_t _timeout_milliseconds = int_milliseconds_t(DEFAULT_SOCKET_TIMEOUT_SECONDS * 1000);
 
             inline ConnectionError InternalConnect(const char *ip, uint16_t port)
             {
@@ -37,6 +47,16 @@ namespace pigpio_remote
 
             inline int InternalRead(uint8_t *data, size_t len)
             {
+                auto start = std::chrono::steady_clock::now();
+                auto elapsed_milliseconds = int_milliseconds_t::zero();
+                while ((this->_client.available() < len) && elapsed_milliseconds < this->_timeout_milliseconds)
+                    {
+                        delay(5);
+                        auto current = std::chrono::steady_clock::now();
+                        elapsed_milliseconds = std::chrono::duration_cast<int_milliseconds_t>(current - start);
+                    }
+
+                Serial.printf("Data bytes available now vs expected: %d / %d", this->_client.available(), len);
                 return this->_client.read(data, len);
             }
 
@@ -55,13 +75,6 @@ namespace pigpio_remote
             inline void InternalStop()
             {
                 this->_client.stop();
-            }
-
-        public:
-            static constexpr int DEFAULT_SOCKET_TIMEOUT_SECONDS = 5;
-            NoNagleSyncClient()
-            {
-                this->_client.setTimeout(DEFAULT_SOCKET_TIMEOUT_SECONDS);
             }
         };
 

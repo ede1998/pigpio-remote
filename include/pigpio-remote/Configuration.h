@@ -9,8 +9,6 @@
 #endif
 #endif
 
-#include <string>
-
 namespace pigpio_remote
 {
     namespace version
@@ -34,16 +32,6 @@ namespace pigpio_remote
          * @brief Patch number of pigpio_remote library.
          */
         constexpr unsigned int PATCH = 0;
-
-        /**
-         * @brief Semantic version number of the pigpio_remote library as a string.
-         * 
-         * @return std::string semantic version number
-         */
-        inline std::string GetVersion()
-        {
-            return std::to_string(MAJOR) + "." + std::to_string(MINOR) + "." + std::to_string(PATCH);
-        }
 
     } // namespace version
 
