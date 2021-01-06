@@ -39,7 +39,7 @@ namespace pigpio_remote
 
                 int err = getaddrinfo(ip, std::to_string(port).c_str(), &hints, &res);
 
-                if (err == 0)
+                if (err != 0)
                 {
                     return ConnectionError::INVALID_SERVER;
                 }
