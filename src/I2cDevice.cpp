@@ -310,8 +310,6 @@ namespace pigpio_remote
             return {PigpioError::PI_BAD_HANDLE};
         }
 
-        const uint32_t count_32 = count;
-
         //_pml(pi);
         auto result = this->_connection.SendCommand(Command::PI_CMD_I2CRD, this->_handle, count);
 
