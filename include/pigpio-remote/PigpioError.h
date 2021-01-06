@@ -69,6 +69,20 @@ namespace pigpio_remote
             auto externally_visible_error = static_cast<PigpioError>(*this);
             return externally_visible_error == error;
         }
+
+        /**
+         * @brief Compares the class and a \p PigpioError.
+         * 
+         * If the contained \p PigpioError in the class is not an \p allowed_error, \p PigpioError::PI_UNEXPECTED_ERROR is used
+         * for comparison.
+         * 
+         * @return true if different error
+         * @return false if same error
+         */
+        bool operator!=(PigpioError error) const
+        {
+            return !(*this == error);
+        }
         
         /**
          * @brief Get the stored `PigpioError`.
